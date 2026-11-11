@@ -246,7 +246,11 @@ namespace Avilla_Forensics
                 startInfo3.CreateNoWindow = true;
                 startInfo3.UseShellExecute = false;
                 startInfo3.RedirectStandardOutput = true;
-                startInfo3.FileName = "C:\\Program Files (x86)\\Common Files\\Apple\\Mobile Device Support\\AppleMobileBackup.exe";
+                // iTunes moderno (x64) se instala en Program Files; el antiguo en Program Files (x86)
+                string appleBackup = "C:\\Program Files\\Common Files\\Apple\\Mobile Device Support\\AppleMobileBackup.exe";
+                if (!File.Exists(appleBackup))
+                    appleBackup = "C:\\Program Files (x86)\\Common Files\\Apple\\Mobile Device Support\\AppleMobileBackup.exe";
+                startInfo3.FileName = appleBackup;
                 startInfo3.Arguments = " -s " + textBoxID.Text + " -b";
                 process3.StartInfo = startInfo3;
                 process3.Start();

@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Avilla_Forensics</RootNamespace>
+    <AssemblyName>Avilla Forensics</AssemblyName>
+    <ApplicationIcon>phone.ico</ApplicationIcon>
+    <StartupObject>Avilla_Forensics.Program</StartupObject>
+    <!-- SQLite.Interop.dll del repositorio es x64; en Windows ARM64 corre por emulacion x64 -->
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Product>Avilla Forensics</Product>
+    <Copyright>GPLv3 - Daniel Hubscher Avilla</Copyright>
+  </PropertyGroup>
+
+  <!-- Compilar fuera de Windows (por ejemplo con dotnet en Linux) -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.VisualBasic" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="*.Designer.cs;*.designer.cs">
+      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.Designer','').Replace('.designer','')).cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="*.resx">
+      <DependentUpon>%(Filename).cs</DependentUpon>
+    </EmbeddedResource>
+    <!-- Clases vacias que tapaban a System.Management y rompian FormUnlock -->
+    <Compile Remove="ManagementObject.cs;ManagementObjectSearcher.cs" />
+    <None Remove="packages.config" />
+    <None Remove="*.bat" />
+  </ItemGroup>
+
+</Project>
